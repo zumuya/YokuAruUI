@@ -1,7 +1,7 @@
 # YokuAruUI
 
 - Requirements: iOS 15 or later, iPadOS 15 or later
-- Swift version: 5.5
+- Swift version: 5.7
 
 ## Features
 
