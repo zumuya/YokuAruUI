@@ -19,28 +19,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import SwiftUI
 import InlineLocalization
 
-public protocol AnyHelpPage
-{
-	var identifier: String { get }
-	var title: [Language: String] { get }
-	var systemImageName: String? { get }
-	@MainActor var view_any: AnyView { get }
-}
-extension AnyHelpPage where Self: RawRepresentable, RawValue == String
-{
-	public var identifier: String { rawValue }
-}
-public protocol HelpPage: AnyHelpPage
+public protocol HelpPage<PageView>
 {
 	associatedtype PageView: View
 	@MainActor var view: PageView { get }
+	
+	var identifier: String { get }
+	var title: [Language: String] { get }
+	var systemImageName: String? { get }
+}
+extension HelpPage where Self: RawRepresentable, RawValue == String
+{
+	public var identifier: String { rawValue }
 }
 extension HelpPage
 {
 	@MainActor public var view_any: AnyView { .init(view) }
 }
 
-@MainActor public protocol HelpPageSet
+@MainActor public protocol HelpPageSet<Page, TableOfContents>
 {
 	associatedtype Page: HelpPage
 	associatedtype TableOfContents: View

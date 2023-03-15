@@ -27,7 +27,7 @@ import SwiftUI
 	
 	@Published public var isShowingTableOfContents = false
 	@Published public var helpPageSet: PageSet
-	@Published public var currentPage: AnyHelpPage?
+	@Published public var currentPage: (any HelpPage)?
 	@Published public var helpStyle = HelpStyle()
 	
 	public func showPage<Page: HelpPage>(_ page: Page)
