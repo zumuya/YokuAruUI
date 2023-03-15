@@ -115,9 +115,10 @@ public struct HelpView<PageSet: HelpPageSet>: View
 				}
 				ToolbarItemGroup(placement: .navigation) {
 					Toggle(isOn: $helpViewModel.isShowingTableOfContents) {
-						Image(systemName: "menucard")
+						Label(String(localizedIn: [.japanese: "目次", .english: "Table of Contents"])!, systemImage: "menucard")
 					}
 					.toggleStyle(.button)
+					.labelsHidden()
 				}
 			}
 		}
