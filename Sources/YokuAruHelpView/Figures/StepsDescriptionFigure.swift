@@ -19,9 +19,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import SwiftUI
 import InlineLocalization
 
-public struct StepsDescriptionFigure: View
+private extension VerticalAlignment
 {
-	public struct Step: Identifiable
+	struct StepIconVerticalCenter: AlignmentID
+	{
+		static func defaultValue(in d: ViewDimensions) -> CGFloat
+		{
+			d[VerticalAlignment.center]
+		}
+	}
+	static let stepIconVerticalCenter = VerticalAlignment(StepIconVerticalCenter.self)
+}
+
+public struct StepsDescriptionFigure<Separator: View>: View
+{
+	public struct Step: Identifiable, Equatable
 	{
 		public init(systemName: String, description: [Language : String])
 		{
@@ -32,17 +44,20 @@ public struct StepsDescriptionFigure: View
 		public var systemName: String
 		public var description: [Language: String]
 		
-		public var id: String { systemName }
+		public var id: String { systemName + description.values.joined() }
 	}
 	
 	@Environment(\.horizontalSizeClass) private var horizontalSizeClass
 	var isCompact: Bool { horizontalSizeClass == .compact }
+	var showsArrow = false
 	
 	var steps: [Step]
+	var separatorHandler: () -> Separator
 	
-	public init(steps: [StepsDescriptionFigure.Step])
+	public init(steps: [StepsDescriptionFigure.Step], @ViewBuilder separator: @escaping () -> Separator = { EmptyView() })
 	{
 		self.steps = steps
+		self.separatorHandler = separator
 	}
 	
 	@ViewBuilder func stepView(for step: Step) -> some View
@@ -53,6 +68,7 @@ public struct StepsDescriptionFigure: View
 				.aspectRatio(contentMode: .fit)
 				.foregroundColor(.accentColor)
 				.frame(width: (isCompact ? 42 : 60), height: (isCompact ? 42 : 60))
+				.alignmentGuide(VerticalAlignment.stepIconVerticalCenter) { $0[VerticalAlignment.center] }
 			
 			Text(localizedIn: step.description)
 				.multilineTextAlignment(.center)
@@ -62,9 +78,20 @@ public struct StepsDescriptionFigure: View
 	
 	public var body: some View
 	{
-		HStack(alignment: .firstTextBaseline) {
-			ForEach(steps) {
-				stepView(for: $0)
+		HStack(alignment: .stepIconVerticalCenter) {
+			ForEach(steps) { step in
+				HStack(alignment: .stepIconVerticalCenter) {
+					stepView(for: step)
+					
+					if (step != steps.last) {
+						separatorHandler()
+							.font(.system(size: (isCompact ? 20 : 24)))
+							.foregroundStyle(.tertiary)
+							.alignmentGuide(.stepIconVerticalCenter) { $0[VerticalAlignment.center] }
+							.fixedSize()
+							.frame(width: 0, height: 0)
+					}
+				}
 			}
 		}
 		.frame(width: 200, alignment: .center)

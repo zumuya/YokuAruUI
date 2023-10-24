@@ -87,7 +87,9 @@ struct TopHelpPage: View
 				.init(systemName: "hand.tap", description: [.japanese: "タップ", .english: "Tap"]),
 				.init(systemName: "hand.draw", description: [.japanese: "ドラッグ", .english: "Draw"]),
 				.init(systemName: "cup.and.saucer", description: [.japanese: "ティータイム", .english: "Tea Time"]),
-			])
+			]) {
+				Text("｜")
+			}
 			
 			helpViewModel.helpStyle.p {
 				Text(verbatim: """
