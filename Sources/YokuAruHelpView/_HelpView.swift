@@ -30,12 +30,12 @@ import SwiftUI
 	@Published public var currentPage: (any HelpPage)?
 	@Published public var helpStyle = HelpStyle()
 	
-	public func showPage<Page: HelpPage>(_ page: Page)
+	public func showPage(_ page: some HelpPage)
 	{
 		currentPage = page
 		isShowingTableOfContents = false
 	}
-	@ViewBuilder public func button<Page: HelpPage>(for page: Page) -> some View
+	@ViewBuilder public func button(for page: some HelpPage) -> some View
 	{
 		Button {
 			self.showPage(page)
